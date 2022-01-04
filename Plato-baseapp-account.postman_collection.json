@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "f5743990-4594-45e1-b40d-4be0a758c229",
+		"name": "Plato-baseapp-account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login account",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"/*{\r",
+							"    var account = pm.iterationData.get(\"accountName\");\r",
+							"\r",
+							"    pm.environment.set(\"accountName\",account);\r",
+							"    console.log(\"Account name sent: \",account);\r",
+							"}\r",
+							"{\r",
+							"    var pass = pm.iterationData.get(\"passWord\");\r",
+							"    pm.environment.set(\"passWord\",pass);\r",
+							"    console.log(\"Password sent:\",pass);\r",
+							"}\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"{\r",
+							"    pm.test(\"Login successfully\",function(){\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"}\r",
+							"// Set variables global to use\r",
+							"var data = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"Token-global\",data.TokenKey);\r",
+							"//set next request\r",
+							"postman.setNextRequest('Create account');\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token-global}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"accountName\": \"sys-admin\",\r\n  \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/authentication/login",
+					"protocol": "https",
+					"host": [
+						"app-platonl-base-api-chn",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"accountName\": \"sys-admin\",\r\n  \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/authentication/login",
+							"protocol": "https",
+							"host": [
+								"app-platonl-base-api-chn",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "546"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/10.0"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 24 Sep 2021 03:24:43 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Roles\": null,\n    \"TenantID\": \"00000000-0000-0000-0000-000000000000\",\n    \"UserID\": 15,\n    \"TokenKey\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zaWQiOiIxNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJzeXMtYWRtaW4iLCJleHAiOjE2MzI0NTU2ODQsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3QifQ.rjXV10qzSycH5JyESTMHoedqxVR2498FFNns9I8k13A\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"OK\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"var status = JSON.parse(responseBody);\r",
+							"    pm.environment.set(\"accountID\",status.AccountID);\r",
+							"    pm.environment.set(\"personID\",status.PersonID);\r",
+							"    pm.environment.set(\"accountName\",status.Login);\r",
+							"    pm.environment.set(\"accountVersion\",status.AccountVersion);\r",
+							"    pm.environment.set(\"personVersion\",status.PersonVersion);\r",
+							"    postman.setNextRequest('Edit account');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token-global}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"accountID\": 0,\r\n  \"login\": \"autoapi\",\r\n  \"isActived\": true,\r\n  \"personID\": 0,\r\n  \"firstName\": \"Auto\",\r\n  \"lastName\": \"API\",\r\n  \"email\": \"Auto-api@gmail.com\",\r\n  \"phone\": \"0329619933\",\r\n  \"company\": \"kloon\",\r\n  \"address\": \"Hanoi\",\r\n  \"accountVersion\": \"\",\r\n  \"personVersion\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/account",
+					"protocol": "https",
+					"host": [
+						"app-platonl-base-api-chn",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"OK\",function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"var resp = JSON.parse(responseBody);\r",
+							"pm.test(\"ok\")\r",
+							"postman.setNextRequest('Get account');\r",
+							"postman.setNextRequest('Create account');\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"    pm.environment.get(\"accountID\");\r",
+							"    pm.environment.get(\"personID\");\r",
+							"    pm.environment.get(\"accountName\");\r",
+							"    pm.environment.get(\"accountVersion\");\r",
+							"    pm.environment.get(\"personVersion\");\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token-global}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"accountID\": {{accountID}},\r\n  \"login\": \"{{accountName}}\",\r\n  \"isActived\": true,\r\n  \"firstName\": \"AUTO POSTMAN\",\r\n  \"lastName\": \"API\",\r\n  \"email\": \"posmant-api-auto@gmail.com\",\r\n  \"personID\": {{personID}},\r\n  \"phone\": \"0329456789\",\r\n  \"company\": \"KLOON VN\",\r\n  \"address\": \"Hanoi\",\r\n  \"accountVersion\": \"{{accountVersion}}\",\r\n  \"personVersion\": \"{{personVersion}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/account",
+					"protocol": "https",
+					"host": [
+						"app-platonl-base-api-chn",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"OK\",function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"postman.setNextRequest('Delete account');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token-global}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/account/{{accountID}}",
+					"protocol": "https",
+					"host": [
+						"app-platonl-base-api-chn",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"{{accountID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete account",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"    pm.environment.get(\"accountID\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"OK\",function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token-global}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://app-platonl-base-api-chn.azurewebsites.net/api/account/{{accountID}}",
+					"protocol": "https",
+					"host": [
+						"app-platonl-base-api-chn",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"account",
+						"{{accountID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
